@@ -1,0 +1,15 @@
+#BlueJ class context
+comment0.params=size
+comment0.target=AppMain(int)
+comment1.params=x\ y
+comment1.target=void\ checkLocation(int,\ int)
+comment1.text=\r\n\ To\ be\ used\ to\ set\ the\ flagged\ array.\r\n
+comment2.params=
+comment2.target=void\ update()
+comment3.params=
+comment3.target=java.lang.String\ toString()
+comment4.params=
+comment4.target=boolean[][]\ getArray()
+comment5.params=
+comment5.target=void\ run()
+numComments=6
