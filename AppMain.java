@@ -9,25 +9,31 @@
  * <li>Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.</li>
  *</ol>
  * 
- * @author PFFFFFFFFFFFTT Productions
+ * @author PFFFT Productions
  * @version 20140110
  */
-public class AppMain
+public class AppMain implements Runnable
 {
     private boolean[][] array;
     private boolean[][] arrayStep2;
+
+    public int updatesPerSecond = 1;
+    public boolean running = true;
     public AppMain(int size)
     {
         array = new boolean [size][size];
         arrayStep2 = new boolean [size][size];
 
-        array[10][10] = true;
-        array[11][10] = true;
-        array[10][11] = true;
-        array[11][11] = true;
+        //Spawns a square
+        array[12][12] = true;
+        array[12][13] = true;
+        array[13][12] = true;
+        array[13][13] = true;
 
+        //makes sure they despawn
         array[5][5] = true;
 
+        //Should create a blinker
         array[7][7] =true;
         array[8][7] = true;
         array[9][7] = true;
@@ -40,19 +46,18 @@ public class AppMain
     {
         int localCount = 0;
 
-        if (y-1>=0 && array[x][y-1])                                localCount++;
-        if (y-1>=0 && x+1< array.length && array[x+1][y-1])         localCount++;
-        if (x+1<array.length && array[x+1][y])                      localCount++;
-        if (x+1<array.length && y+1<array.length && array[x+1][y+1])localCount++;
-        if (y+1<array.length && array[x][y+1])                      localCount++;
-        if (y+1<array.length && x-1>=0 && array[x-1][y+1])          localCount++;
-        if (x-1>=0 && array[x-1][y])                                localCount++;
-        if (x-1>=0 && y-1>=0 && array[x-1][y-1])                    localCount++;
+        if (y-1>=0 && array[x][y-1])                                localCount++;   //Top
+        if (y-1>=0 && x+1< array.length && array[x+1][y-1])         localCount++;   //Top Right
+        if (x+1<array.length && array[x+1][y])                      localCount++;   //Right
+        if (x+1<array.length && y+1<array.length && array[x+1][y+1])localCount++;   //Botton Right
+        if (y+1<array.length && array[x][y+1])                      localCount++;   //Bottom
+        if (y+1<array.length && x-1>=0 && array[x-1][y+1])          localCount++;   //Bottom Left
+        if (x-1>=0 && array[x-1][y])                                localCount++;   //Left
+        if (x-1>=0 && y-1>=0 && array[x-1][y-1])                    localCount++;   //Top Left
 
         if (localCount == 3)                        arrayStep2[x][y] = true;
         else if (array[x][y] && localCount == 2)    arrayStep2[x][y] = true;
         else                                        arrayStep2[x][y] = false;
-
     }
 
     public void update()
@@ -63,6 +68,7 @@ public class AppMain
             }
         }
         array = arrayStep2;
+        arrayStep2 = new boolean[array.length][array.length];
     }
 
     public String toString()
@@ -78,5 +84,16 @@ public class AppMain
     }
 
     public boolean[][] getArray(){return array;}
+
+    public void run() {
+        while (true) {
+            if (running) {
+                update();
+            } else {
+                System.out.println("Simulation updated");
+            }
+            try { Thread.sleep(1000/updatesPerSecond); } catch (Exception E) {E.printStackTrace();}
+        }
+    }
 }
 
