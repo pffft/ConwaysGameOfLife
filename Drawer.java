@@ -29,9 +29,9 @@ public class Drawer {
                 public void keyPressed(KeyEvent e){
                     System.out.println("Key Pressed: " + e.getKeyCode());
                     if(e.getKeyCode()==KeyEvent.VK_OPEN_BRACKET){
-                        grid.updatesPerSecond -= 1;
+                        if (grid.updatesPerSecond > 1) grid.updatesPerSecond -= 1;
                     } else if (e.getKeyCode()==KeyEvent.VK_CLOSE_BRACKET) {
-                        grid.updatesPerSecond += 1;
+                        if (grid.updatesPerSecond < 120) grid.updatesPerSecond += 1;
                     } else if (e.getKeyCode()==KeyEvent.VK_SPACE) {
                         grid.running = !grid.running;
                     }
@@ -48,7 +48,7 @@ public class Drawer {
         drawingFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Creates a new grid with size 15
-        size = 15;
+        size = 100;
         grid = new AppMain(size);
 
         //Sets up the ideal graphics update rate
@@ -66,7 +66,7 @@ public class Drawer {
     private void run() {
         simulation.start();
         while(true) {
-            try { Thread.sleep(1000 / FPS); } catch(Exception e) {}
+            //try { Thread.sleep(1000 / FPS); } catch(Exception e) {}
 
             long currentTime = Calendar.getInstance().getTimeInMillis();
             actualFPS = 1000 / (double)(currentTime - lastTime);
@@ -107,18 +107,10 @@ public class Drawer {
     }
 
     private void drawGrid(Graphics2D g) {
-        for (int i = 0; i * 7 < drawingPanel.getWidth(); i++) {
-            for (int j = 0; j * 7 < drawingPanel.getHeight(); j++) {
-                for (int k = 0; k < 7; k++) {
-                    for (int l = 0; l < 7; l++) {
-                        if (k == 0 || l == 0 || k == 6 || l == 6) {
-                            g.setColor(Color.WHITE);
-                            g.fillRect((i * 7) + k, (j * 7) + l, 1, 1);
-                        } else {
-                            g.setColor(Color.DARK_GRAY);                            
-                        }
-                    }
-                }
+        for (int i = 0; i < drawingPanel.getWidth() && i< size * 7; i += 7) {
+            for (int j = 0; j < drawingPanel.getHeight() && j < size * 7; j += 7) {
+               g.setColor(Color.DARK_GRAY);
+               g.fillRect(i, j, 6, 6);
             }
         }
     }
@@ -126,11 +118,7 @@ public class Drawer {
     //Draws a living pattern.
     private void drawLiving(Graphics2D g, int x, int y) {
         g.setColor(Color.YELLOW);
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                g.fillRect(x + i, y + j, 1, 1);
-            }
-        }
+        g.fillRect(x, y, 5, 5);
     }
 }
 
