@@ -68,7 +68,7 @@ public class Drawer {
         while(true) {
             //try { Thread.sleep(1000 / FPS); } catch(Exception e) {}
 
-            long currentTime = Calendar.getInstance().getTimeInMillis();
+            long currentTime = System.currentTimeMillis();
             actualFPS = 1000 / (double)(currentTime - lastTime);
             lastTime = currentTime;
 
@@ -91,34 +91,25 @@ public class Drawer {
         backbuffer = new BufferedImage(drawingPanel.getWidth(), drawingPanel.getHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = (Graphics2D) backbuffer.getGraphics();           
 
-        drawGrid(g2d);
+        for (int i = 0; i < drawingPanel.getWidth() && i< size * 7; i += 7) {
+            for (int j = 0; j < drawingPanel.getHeight() && j < size * 7; j += 7) {
+                g2d.setColor(Color.DARK_GRAY);
+                g2d.fillRect(i, j, 6, 6);
+            }
+        }
 
         boolean[][] array = grid.getArray();
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 //If this cell is alive..
                 if (array[i][j]) {
-                    drawLiving(g2d, i * 7, j * 7);
+                    g2d.setColor(Color.YELLOW);
+                    g2d.fillRect(i*7, j*7, 5, 5);
                 }
             }
         }
 
         drawingPanel.getGraphics().drawImage(backbuffer, 0, 0, drawingPanel);
-    }
-
-    private void drawGrid(Graphics2D g) {
-        for (int i = 0; i < drawingPanel.getWidth() && i< size * 7; i += 7) {
-            for (int j = 0; j < drawingPanel.getHeight() && j < size * 7; j += 7) {
-               g.setColor(Color.DARK_GRAY);
-               g.fillRect(i, j, 6, 6);
-            }
-        }
-    }
-
-    //Draws a living pattern.
-    private void drawLiving(Graphics2D g, int x, int y) {
-        g.setColor(Color.YELLOW);
-        g.fillRect(x, y, 5, 5);
     }
 }
 
